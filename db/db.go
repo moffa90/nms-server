@@ -1,7 +1,7 @@
 package db
 
 import (
-	"github.com/moffa90/triadNMS/db/models"
+	"github.com/moffa90/nms-server/db/models"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"os"

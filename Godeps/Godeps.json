@@ -1,5 +1,5 @@
 {
-	"ImportPath": "github.com/moffa90/triadNMS",
+	"ImportPath": "github.com/moffa90/nms-server",
 	"GoVersion": "go1.11",
 	"GodepVersion": "v80",
 	"Deps": [

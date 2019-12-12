@@ -1,11 +1,11 @@
 package subagentSNMP
 
 import (
-	"github.com/moffa90/triadNMS/assets"
-	"github.com/moffa90/triadNMS/constants"
-	"github.com/moffa90/triadNMS/constants/snmp"
-	"github.com/moffa90/triadNMS/snmpTree"
-	"github.com/moffa90/triadNMS/utils"
+	"github.com/moffa90/nms-server/assets"
+	"github.com/moffa90/nms-server/constants"
+	"github.com/moffa90/nms-server/constants/snmp"
+	"github.com/moffa90/nms-server/snmpTree"
+	"github.com/moffa90/nms-server/utils"
 	log "github.com/Sirupsen/logrus"
 	"gitlab.com/martinclaro/go-agentx"
 	"gitlab.com/martinclaro/go-agentx/pdu"

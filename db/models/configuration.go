@@ -1,7 +1,7 @@
 package models
 
 import (
-	"github.com/moffa90/triadNMS/assets"
+	"github.com/moffa90/nms-server/assets"
 	"encoding/json"
 	"errors"
 	"github.com/jinzhu/gorm"

@@ -2,9 +2,9 @@ package usb
 
 import (
 	"bufio"
-	"github.com/moffa90/triadNMS/constants"
-	"github.com/moffa90/triadNMS/db"
-	"github.com/moffa90/triadNMS/db/models"
+	"github.com/moffa90/nms-server/constants"
+	"github.com/moffa90/nms-server/db"
+	"github.com/moffa90/nms-server/db/models"
 	log "github.com/Sirupsen/logrus"
 	"github.com/google/gousb"
 	"github.com/google/gousb/usbid"
