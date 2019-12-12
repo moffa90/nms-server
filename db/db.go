@@ -14,14 +14,14 @@ var once sync.Once
 func Init(){
 	var err error
 	//TODO: remove strings and replace with constants
-	if _, err := os.Stat("/data/nms-triad/nms-data"); os.IsNotExist(err) {
-		os.OpenFile("/data/nms-triad/nms-data", os.O_RDWR|os.O_CREATE, 0666)
+	if _, err := os.Stat("/data/nms-server/nms-data"); os.IsNotExist(err) {
+		os.OpenFile("/data/nms-server/nms-data", os.O_RDWR|os.O_CREATE, 0666)
 	}
 
 
 	once.Do(func() {
-		Shared, err = gorm.Open("sqlite3", "file:/data/nms-triad/nms-data?cache=shared&mode=rwc&_sync=1&_journal=WAL")
-		//Shared, err = gorm.Open("sqlite3", "file:/data/nms-triad/nms-data")
+		Shared, err = gorm.Open("sqlite3", "file:/data/nms-server/nms-data?cache=shared&mode=rwc&_sync=1&_journal=WAL")
+		//Shared, err = gorm.Open("sqlite3", "file:/data/nms-server/nms-data")
 		if err != nil {
 			panic("failed to connect database")
 		}

@@ -25,7 +25,7 @@ import (
 
 
 
-//scp -P 2284 /home/jmoffa/Escritorio/NMS/nms-image/build/tmp/sysroots-components/cortexa7hf-neon-vfpv4/nms-triad/usr/bin/nms-triad root@cellgain.ddns.net:/home/root
+//scp -P 2284 /home/jmoffa/Escritorio/NMS/nms-image/build/tmp/sysroots-components/cortexa7hf-neon-vfpv4/nms-server/usr/bin/nms-server root@cellgain.ddns.net:/home/root
 
 func init() {
 

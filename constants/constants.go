@@ -5,10 +5,10 @@ package constants
 const (
 
 	//Main path
-	SYSTEM_DIRECTORY = "/etc/nms-triad/"
+	SYSTEM_DIRECTORY = "/etc/nms-server/"
 	SYSTEM_NETWORK_CONF_DIRECTORY = "/etc/systemd/network/"
 
-	LOCAL_DIRECTORY = "/data/nms-triad/"
+	LOCAL_DIRECTORY = "/data/nms-server/"
 	LOCAL_NETWORK_CONF_DIRECTORY = LOCAL_DIRECTORY + "network/"
 	LOCAL_SNMP_CONF_DIRECTORY = LOCAL_DIRECTORY + "snmp/"
 

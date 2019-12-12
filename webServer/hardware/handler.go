@@ -464,7 +464,7 @@ func UpdateFirmwareHandler(w http.ResponseWriter, req *http.Request){
 	defer file.Close()
 
 	extension := filepath.Ext(handler.Filename)
-	path := "/data/nms-triad/" + handler.Filename
+	path := "/data/nms-server/" + handler.Filename
 
 	key := utils.GetEnvVar("bootloader-key")
 	if key == "" {
