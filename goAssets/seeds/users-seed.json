@@ -1,0 +1,33 @@
+[
+  {
+    "username": "admin",
+    "name": "Admin User",
+    "password": "admin",
+    "role": "admin"
+  },
+  {
+    "username": "factory",
+    "name": "Factory User",
+    "password": "factory",
+    "role": "factory"
+  },
+  {
+    "username": "noc",
+    "name": "Noc User",
+    "password": "noc",
+    "role": "noc"
+  },
+  {
+    "username": "tech",
+    "name": "Tech User",
+    "password": "tech",
+    "role": "tech"
+  },
+  {
+    "username": "guest",
+    "name": "Guest User",
+    "password": "guest",
+    "role": "guest"
+  }
+]
+

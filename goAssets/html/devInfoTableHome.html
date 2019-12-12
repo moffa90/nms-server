@@ -1,0 +1,51 @@
+{{define "cellInfo"}}
+    {{ if eq .ProductId ""}}
+        No device
+    {{else}}
+        <h6>
+            <a href="management/hardware/{{.Serial}}">{{.ProductId}}</a><br>
+            <small>{{.FWversion}}</small><br>
+            <small class="text-muted">{{.DevId}}</small>
+        </h6>
+        <p>
+            <span class="status-icon {{ if ne .Alarms -1}}bg-success {{else }} bg-danger {{end}}"></span>
+            Healthiness
+        </p>
+        <p>
+            <span class="status-icon
+                {{ if and (ne .Alarms -1)}}
+                    {{if (eq .Alarms 0)}}
+                        bg-success
+                    {{ else }}
+                        bg-danger
+                    {{end}}
+                {{else}}
+                    bg-gray-light
+                {{end}}">
+            </span>
+            Alarms
+        </p>
+    {{end}}
+{{end}}
+
+{{define "cellInfo2"}}
+        <h6>
+            <a href="#">{{.Hostname}}</a><br>
+            <small>{{.Ip}}:{{.Port}}</small>
+        </h6>
+        <p>
+            <span class="status-icon bg-success"></span>
+            Healthiness
+        </p>
+        <p>
+            <span class="status-icon bg-danger">
+            </span>
+            Alarms
+        </p>
+{{end}}
+
+{{define "noRemoteCellTemplate"}}
+    <a class="text-muted" href="management/remotes/">
+        No configured
+    </a>
+{{end}}

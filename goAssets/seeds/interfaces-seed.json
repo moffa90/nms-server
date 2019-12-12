@@ -1,0 +1,10 @@
+[
+  {
+    "name": "eth0",
+    "dhcp": true
+  },
+  {
+    "name": "wlan0",
+    "dhcp": false
+  }
+]

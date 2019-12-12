@@ -1,0 +1,17 @@
+[
+  {
+    "name": "admin"
+  },
+  {
+    "name": "noc"
+  },
+  {
+    "name": "factory"
+  },
+  {
+    "name": "guest"
+  },
+  {
+    "name": "tech"
+  }
+]

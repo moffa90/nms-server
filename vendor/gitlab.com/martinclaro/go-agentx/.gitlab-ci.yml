@@ -1,0 +1,33 @@
+image: golang:latest
+
+variables:
+  REPO_NAME: gitlab.com/martinclaro/go-agentx
+
+before_script:
+- mkdir -p $GOPATH/src/$(dirname $REPO_NAME)
+- ln -svf $CI_PROJECT_DIR $GOPATH/src/$REPO_NAME
+- cd $GOPATH/src/$REPO_NAME
+
+.go_test: &go_test
+  type: test
+  script:
+  - ./_ci/bin/setup-snmpd.sh
+  - make test
+
+stages:
+- tests
+
+go-1.8:
+  <<: *go_test
+  stage: tests
+  image: golang:1.8
+
+go-1.9:
+  <<: *go_test
+  stage: tests
+  image: golang:1.9
+
+go-1.10:
+  <<: *go_test
+  stage: tests
+  image: golang:1.10

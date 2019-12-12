@@ -1,0 +1,102 @@
+
+agentAddress  {{.Port}}
+####
+# First, map the community name (COMMUNITY) into a security name
+# (local and mynetwork, depending on where the request is coming
+# from):
+
+#               sec.name        source          community
+com2sec         paranoid        default         public
+com2sec         read            default         {{.ReadString}}
+com2sec         write           default         {{.WriteString}}
+
+####
+# Second, map the security names into group names:
+
+#     group.name        sec.model	sec.name
+group publicGroup       v1              paranoid
+group publicGroup       v2c             paranoid
+group publicGroup       usm             paranoid
+
+group readGroup         v1              read
+group readGroup         v2c             read
+group readGroup         usm             read
+
+group writeGroup        v1              write
+group writeGroup        v2c             write
+group writeGroup        usm             write
+
+####
+# Third, create a view for us to let the groups have rights to:
+
+#           incl/excl subtree                          mask
+view all    included  .1                               80
+view system included  .iso.org.dod.internet.mgmt.mib-2.system
+
+####
+# Finally, grant the 2 groups access to the 1 view with different
+# write permissions:
+
+#                       context sec.model   sec.level   match   read    write  notif
+access publicGroup	    ""	    any         noauth      exact   system  none   none
+access readGroup        ""	    any         noauth      exact   all     none   none
+access writeGroup       ""	    any         noauth      exact   none     all    none
+
+# -----------------------------------------------------------------------------
+
+sysLocation    {{.SysLocation}}
+sysContact     {{.SysContact}}
+
+sysServices    72
+
+
+# At least one  'mountd' process
+proc  mountd
+# No more than 4 'ntalkd' processes - 0 is OK
+proc  ntalkd    4
+# At least one 'sendmail' process, but no more than 10
+proc  sendmail 10 1
+
+#
+#  Disk Monitoring
+#
+                               # 10MBs required on root disk, 5% free on /var, 10% free on all other disks
+disk       /     10000
+disk       /var  5%
+includeAllDisks  10%
+
+#  Walk the UCD-SNMP-MIB::dskTable to see the resulting output
+#  Note that this table will be empty if there are no "disk" entries in the snmpd.conf file
+
+#
+#  System Load
+#
+# Unacceptable 1-, 5-, and 15-minute load averages
+load   12 10 5
+
+#   send SNMPv1  traps
+trapsink     localhost public
+
+#   send SNMPv2c traps
+#trap2sink    localhost public
+
+#   send SNMPv2c INFORMs
+#informsink   localhost public
+
+# Remember to activate the 'createUser' lines above
+iquerySecName   internalUser
+rouser          internalUser
+# generate traps on UCD error conditions
+defaultMonitors          yes
+# generate traps on linkUp/Down
+linkUpDownNotifications  yes
+
+#
+#  AgentX Sub-agents
+#
+#  Run as an AgentX master agent
+master          agentx
+#  Listen for network connections (from localhost)
+#    rather than the default named socket /var/agentx/master
+agentXSocket    tcp:localhost:705
+

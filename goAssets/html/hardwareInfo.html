@@ -1,0 +1,750 @@
+{{template "header"}}
+{{template "menu" .}}
+<div class="my-3 my-md-5">
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">
+                Hardware Information
+            </h1>
+        </div>
+        <div class="row row-cards">
+            {{ if not .HardInfo}}
+            <div class="col-sm-12 col-lg-12">
+                <div class="card p-3">
+                    <div class="d-flex align-items-center">
+                    <span class="stamp stamp-md bg-red mr-3">
+                      <i class="fe fe-alert-circle"></i>
+                    </span>
+                        <div>
+                            <h4 class="m-0"><small> The device is unreachable.</small></h4>
+                            <small class="text-muted">Please check the connection</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{else}}
+            <div class="col-sm-12 col-lg-12">
+                <div class="card p-3">
+                    <div class="d-flex align-items-center">
+                    <span class="stamp stamp-md bg-green mr-3">
+                      <i class="fe fe-info"></i>
+                    </span>
+                        <div>
+                            <h4 class="m-0">{{$.HardInfo.ProductId}} <small>({{$.HardInfo.FWversion}})</small></h4>
+                            <small class="text-muted">Serial: {{$.HardInfo.Serial}} @ Backplane: {{$.HardInfo.Backplane}}, Slot: {{$.HardInfo.Address}}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{end}}
+
+            <div class="col-lg-3 col-sm-12 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Sensors</h3>
+                        <div class="card-options">
+                            <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+                        </div>
+                    </div>
+                    {{ if .Sensors}}
+                        <table class="table card-table">
+                            {{range $s := .Sensors}}
+                                {{if ne $s.Key "Alarms"}}
+                                    <tr>
+                                        <td>{{$s.Key}}:</td>
+                                        <td class="text-right"><span class="text-muted" id="{{$s.Key}}">{{$s.Value}}</span></td>
+                                    </tr>
+                                {{end}}
+                            {{end}}
+                        </table>
+                    {{end}}
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-12 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Controls</h3>
+                        <div class="card-options">
+                            <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+                        </div>
+                    </div>
+                    {{ if .Controls}}
+                        <table class="table card-table">
+                            {{range $c := .Controls}}
+                                <tr>
+                                    <td width="40%">{{$c.Key}}:</td>
+                                    <td width="40%" class="text-right"><span class="{{if eq $c.Value "ON"}} text-primary {{else if eq $c.Value "OFF"}} text-danger {{else}} text-muted {{end}}">{{$c.Value}}</span></td>
+                                    <td width="20%" class="text-right"><a href="#" id="{{$c.Key}}" control-value="{{$c.Value}}" class="icon"><i class="fe fe-edit"></i></a></td>
+                                </tr>
+                            {{end}}
+                        </table>
+                    {{end}}
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-12 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Alarms</h3>
+                        <div class="card-options">
+                            <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+                        </div>
+                    </div>
+                    {{ if .Alarms}}
+                        <table class="table card-table">
+                            {{range $a := .Alarms}}
+                                <tr>
+                                    <td>{{$a.Key}}:</td>
+                                    <td class="text-right">
+                                        <span id="{{$a.Key}}" class="status-icon {{if (eq $a.Value "OFF")}}bg-success{{ else if (eq $a.Value "ON")}}bg-danger{{end}}">
+                                        </span>
+                                    </td>
+                                </tr>
+                            {{end}}
+                        </table>
+                    {{end}}
+                    </div>
+                </div>
+            <div class="col-lg-3 col-sm-12 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Alarm Thresholds</h3>
+                        <div class="card-options">
+                            <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+                            <a href="#" class="icon" id="editThresholds"><i class="fe fe-edit"></i></a>
+                        </div>
+                    </div>
+                    {{ if .Thresholds}}
+                        <table class="table card-table">
+                            {{range $t := .Thresholds}}
+                                <tr>
+                                    <td>{{$t.Key}}:</td>
+                                    <td class="text-right"><span class="text-muted">{{$t.Value}}</span></td>
+                                </tr>
+                            {{end}}
+                        </table>
+                    {{end}}
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-12 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">ADC Values</h3>
+                        <div class="card-options">
+                            <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+                        </div>
+                    </div>
+                    {{ if .ADC}}
+                        <table class="table card-table">
+                            {{range $adc := .ADC}}
+                                <tr>
+                                    <td>{{$adc.Key}}:</td>
+                                    <td class="text-right"><span class="text-muted" id="{{$adc.Key}}">{{$adc.Value}}</span></td>
+                                </tr>
+                            {{end}}
+                        </table>
+                    {{end}}
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-12 col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">RF Detector</h3>
+                        <div class="card-options">
+                            <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+                            <a href="#" class="icon" id="editRFCal"><i class="fe fe-edit"></i></a>
+                        </div>
+                    </div>
+                    {{ if .RFCalDet}}
+                        <table class="table card-table">
+                            {{range $rf := .RFCalDet}}
+                                <tr>
+                                    <td>{{$rf.Key}}:</td>
+                                    <td class="text-right"><span class="text-muted">{{$rf.Value}}</span></td>
+                                </tr>
+                            {{end}}
+                        </table>
+                    {{end}}
+                </div>
+            </div>
+            {{if .Extra1}}
+                <div class="col-lg-3 col-sm-12 col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">{{.ExtraName1}}</h3>
+                            <div class="card-options">
+                                <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+                                <a href="#" class="icon" id="editExtra1"><i class="fe fe-edit"></i></a>
+                            </div>
+                        </div>
+                        {{ if .Extra1}}
+                            <table class="table card-table">
+                                {{range $e := .Extra1}}
+                                    {{if ne $e.Key "NameExtra"}}
+                                        <tr>
+                                            <td>{{$e.Key}}:</td>
+                                            <td class="text-right">
+                                                <span class="{{if eq $e.Value "ON"}} text-primary {{else if eq $e.Value "OFF"}} text-danger {{else}} text-muted {{end}}">{{$e.Value}}</span>
+                                            </td>
+                                        </tr>
+                                    {{end}}
+                                {{end}}
+                            </table>
+                        {{end}}
+                    </div>
+                </div>
+            {{else}}
+                <div class="col-lg-3 col-sm-12 col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Reserved</h3>
+                        </div>
+                        <div class="card-body">
+                            TBD
+                        </div>
+                    </div>
+                </div>
+            {{end}}
+            {{if .Extra2}}
+                <div class="col-lg-3 col-sm-12 col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">{{.ExtraName2}}</h3>
+                            <div class="card-options">
+                                <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+                                <a href="#" class="icon" id="editExtra2"><i class="fe fe-edit"></i></a>
+                            </div>
+                        </div>
+                        {{ if .Extra2}}
+                            <table class="table card-table">
+                                {{range $e := .Extra2}}
+                                    {{if ne $e.Key "NameExtra"}}
+                                        <tr>
+                                            <td>{{$e.Key}}:</td>
+                                            <td class="text-right">
+                                                <span class="{{if eq $e.Value "ON"}} text-primary {{else if eq $e.Value "OFF"}} text-danger {{else}} text-muted {{end}}">{{$e.Value}}</span>
+                                            </td>
+                                        </tr>
+                                    {{end}}
+                                {{end}}
+                            </table>
+                        {{end}}
+                    </div>
+                </div>
+            {{else}}
+                <div class="col-lg-3 col-sm-12 col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Reserved</h3>
+                        </div>
+                        <div class="card-body">
+                            TBD
+                        </div>
+                    </div>
+                </div>
+            {{end}}
+            <div class="col-lg-3 col-sm-12 col-md-6">
+                <div class="card">
+                    <div class="card-status bg-yellow"></div>
+                    <div class="card-header">
+                        <h3 class="card-title">Restore configuration</h3>
+                    </div>
+                    <div class="card-body">
+                        <a href="/management/hardware/{{$.HardInfo.Serial}}/restore" class="btn btn-warning">Restore</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-12 col-md-6">
+                <div class="card">
+                    <div class="card-status bg-yellow"></div>
+                    <div class="card-header">
+                        <h3 class="card-title">Clear alarms</h3>
+                    </div>
+                    <div class="card-body">
+                        <a href="/management/hardware/{{$.HardInfo.Serial}}/clearalarms" class="btn btn-warning">Clear alarms</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-12 col-md-6">
+                <div class="card">
+                    <div class="card-status bg-yellow"></div>
+                    <div class="card-header">
+                        <h3 class="card-title">Reset device</h3>
+                    </div>
+                    <div class="card-body">
+                        <a href="/management/hardware/{{$.HardInfo.Serial}}/reset" class="btn btn-warning">Reset</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-12 col-md-6">
+                <div class="card">
+                    <div class="card-status bg-yellow"></div>
+                    <div class="card-header">
+                        <h3 class="card-title">Save configuration</h3>
+                    </div>
+                    <div class="card-body">
+                        <a href="/management/hardware/{{$.HardInfo.Serial}}/save" class="btn btn-warning">Save</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Attenuator Modal -->
+<div class="modal fade" id="rfAtt-modal" tabindex="-1" role="dialog" aria-labelledby="rfAtt-modal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">RF Attenuator setup</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <form action="" method="post" id="formAtt">
+                    <div class="card-body p-6">
+                        <div class="form-group">
+                            <label class="form-label" id="modalAttenuatorName">Attenuator value:</label>
+                            <input type="text" class="form-control" placeholder="" name="attValue" id="modalAttenuatorValue" value="" data-mask="09.09" autocomplete="off" maxlength="4">
+                            <div class="invalid-feedback" id="modalAttenuatorInvalidFeedback"></div>
+                        </div>
+                        <script>
+                            require(['input-mask']);
+                        </script>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="modalAttenuatorSubmit">Proceed</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Switch Modal -->
+<div class="modal fade" id="switch-modal" tabindex="-1" role="dialog" aria-labelledby="switch-modal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Switch setup</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <form action="" method="post" id="formSwitch">
+                    <div class="card-body p-6">
+                        <div class="form-group">
+                            <label class="custom-switch m-0"><span id="modalSwitchName"></span>
+                                <input type="checkbox" value="1" id="switch" class="custom-switch-input" checked="checked">
+                                <span style="margin-left: 10px" class="custom-switch-indicator"></span>
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="modalSwitchSubmit">Proceed</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Thresholds Modal -->
+<div class="modal fade" id="thresholds-modal" tabindex="-1" role="dialog" aria-labelledby="switch-modal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Thresholds setup</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <form action="" method="post" id="formThresholds">
+                    <input type="hidden" value="{{$.HardInfo.ProductId}}" name="productID">
+                    <div class="card-body p-6">
+                        <div class="form-group">
+                            {{ if .Thresholds}}
+                                {{range $t := .Thresholds}}
+                                    <label class="form-label">{{$t.Key}} value:</label>
+                                    <input type="text" class="form-control numeric" placeholder="" data-key="{{$t.Key | RemoveSpaces}}" name="{{$t.Key | RemoveSpaces}}" value="{{$t.Value}}">
+                                    <div class="invalid-feedback" id="modalAttenuatorInvalidFeedback"></div>
+                                {{end}}
+                            {{end}}
+                        </div>
+                    </div>
+                </form>
+                <script>
+                    require(['maskMoney', 'jquery'], function (maskMoney,$) {
+                        $('.numeric').maskMoney(
+                            {
+                                precision: 0,
+                                allowNegative: true,
+                                allowZero: true,
+                                allowEmpty: true,
+                                thousands: ""
+                            }
+                        );
+                    });
+                </script>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="modalThresholdsSubmit">Proceed</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- RF Detector Modal -->
+<div class="modal fade" id="rfdetector-modal" tabindex="-1" role="dialog" aria-labelledby="switch-modal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Rf Detector calibration</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <form action="" method="post" id="formRfdetector">
+                    <input type="hidden" value="{{$.HardInfo.ProductId}}" name="productID">
+                    <div class="card-body p-6">
+                        <div class="form-group">
+                            {{ if .RFCalDet}}
+                                {{range $rf := .RFCalDet}}
+                                    <label class="form-label">{{$rf.Key}} value:</label>
+                                    <input type="text" class="form-control numeric" placeholder="" data-key="{{$rf.Key | RemoveSpaces}}" name="{{$rf.Key | RemoveSpaces}}" value="{{$rf.Value}}">
+                                {{end}}
+                            {{end}}
+                        </div>
+                    </div>
+                </form>
+                <script>
+                    require(['maskMoney', 'jquery'], function (maskMoney,$) {
+                        $('.numeric').maskMoney(
+                            {
+                                precision: 0,
+                                allowNegative: true,
+                                allowZero: true,
+                                allowEmpty: true,
+                                thousands: ""
+                            }
+                        );
+                    });
+                </script>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="modalRfDetectorSubmit">Proceed</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Extra1 Modal -->
+<div class="modal fade" id="extra1-modal" tabindex="-1" role="dialog" aria-labelledby="switch-modal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                {{ if .Extra1}}
+                    <h5 class="modal-title" id="extra1Name-modal">{{.ExtraName1}} calibration</h5>
+                {{end}}
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <form action="" method="post" id="formExtra1">
+                    <input type="hidden" value="{{$.HardInfo.ProductId}}" name="productID">
+                    <input type="hidden" value="{{.ExtraName1}}" name="nameExtra">
+                    <div class="card-body p-6">
+                        <div class="form-group">
+                            {{ if .Extra1}}
+                                {{range $e := .Extra1}}
+                                    {{if or (eq $e.Key "LaserAPC") (eq $e.Key "AgcMode")}}
+                                        <label class="custom-switch m-0"><span class="form-label" id="modalSwitchName">{{$e.Key}} value:</span>
+                                            <input type="checkbox" value="ON"
+                                                   data-key="{{$e.Key | RemoveSpaces}}"
+                                                   name="{{$e.Key | RemoveSpaces}}"
+                                                   value="{{$e.Value}}"
+                                                   id="{{$e.Key | RemoveSpaces}}"
+                                                   class="custom-switch-input"
+                                                   {{if or (eq $e.Value "ON") (eq $e.Value "1")}}checked="checked"{{end}}>
+                                            <span style="margin-left: 10px" class="custom-switch-indicator"></span>
+                                        </label>
+                                    {{else if and (and (ne $e.Key "OptDetHyst") (ne $e.Key "OptDetFeedback")) (ne $e.Key "NameExtra")}}
+                                        <label class="form-label">{{$e.Key}} value:</label>
+                                        <input type="text" class="form-control numeric" placeholder="" data-key="{{$e.Key | RemoveSpaces}}" name="{{$e.Key | RemoveSpaces}}" value="{{$e.Value}}">
+                                    {{end}}
+                                {{end}}
+                            {{end}}
+                        </div>
+                    </div>
+                </form>
+                <script>
+                    require(['maskMoney', 'jquery'], function (maskMoney,$) {
+                        $('.numeric').maskMoney(
+                            {
+                                precision: 0,
+                                allowNegative: true,
+                                allowZero: true,
+                                allowEmpty: true,
+                                thousands: ""
+                            }
+                        );
+                    });
+                </script>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="modalExtra1Submit">Proceed</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Extra2 Modal -->
+<div class="modal fade" id="extra2-modal" tabindex="-1" role="dialog" aria-labelledby="switch-modal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                {{ if .Extra2}}
+                    <h5 class="modal-title" id="extra2Name-modal">{{.ExtraName2}} calibration</h5>
+                {{end}}
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <form action="" method="post" id="formExtra2">
+                    <input type="hidden" value="{{$.HardInfo.ProductId}}" name="productID">
+                    <input type="hidden" value="{{.ExtraName2}}" name="nameExtra">
+                    <div class="card-body p-6">
+                        <div class="form-group">
+                            {{ if .Extra2}}
+                                {{range $e := .Extra2}}
+                                    {{if ne $e.Key "NameExtra"}}
+                                        <label class="form-label">{{$e.Key}} value:</label>
+                                        <input type="text" class="form-control numeric" placeholder="" data-key="{{$e.Key | RemoveSpaces}}" name="{{$e.Key | RemoveSpaces}}" value="{{$e.Value}}">
+                                    {{end}}
+                                {{end}}
+                            {{end}}
+                        </div>
+                    </div>
+                </form>
+                <script>
+                    require(['maskMoney', 'jquery'], function (maskMoney,$) {
+                        $('.numeric').maskMoney(
+                            {
+                                precision: 0,
+                                allowNegative: true,
+                                allowZero: true,
+                                allowEmpty: true,
+                                thousands: ""
+                            }
+                        );
+                    });
+                </script>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="modalExtra2Submit">Proceed</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    function getData(){
+        requirejs(['jquery'], function( $ ) {
+            $.get("/management/hardware/{{$.HardInfo.Serial}}?alarms&sensors", function( data ) {
+                data.Sensors.forEach(function (element) {
+                    $("#"+ element.Key).html(element.Value)
+                });
+
+                data.Alarms.forEach(function (element) {
+                    if(element.Value == "ON") {
+                        $("#"+ element.Key).removeClass("bg-success").addClass("bg-danger")
+                    }else if (element.Value == "OFF"){
+                        $("#"+ element.Key).removeClass("bg-danger").addClass("bg-success")
+                    }
+                });
+
+                data.ADC.forEach(function (element) {
+                    $("#"+ element.Key).html(element.Value)
+                });
+
+                setTimeout(getData, 2000)
+            },"json")
+        });
+    }
+
+    requirejs(['jquery'], function ($) {
+        $("[id^=RFattenuator i]").click(function () {
+            $("#modalAttenuatorName").empty().append(this.id + " value:");
+            $("#modalAttenuatorName").attr("control-name",this.id);
+            $("#modalAttenuatorValue").empty().val(parseFloat($(this).attr("control-value")));
+            $("#rfAtt-modal").modal();
+            $("#modalAttenuatorValue").removeClass("is-valid").removeClass("is-invalid");
+        });
+
+        $("[id^=AGCMode i],[id^=RFSwitch i],[id^=RFsquelch i]").click(function () {
+            $("#modalSwitchName").empty().append(this.id + " value:");
+            $("#modalSwitchName").attr("control-name",this.id);
+            if($(this).attr("control-value") === "OFF"){
+                $("#switch").removeAttr("checked")
+            }else if($(this).attr("control-value") === "ON"){
+                $("#switch").attr("checked", "checked")
+            }
+            $("#switch-modal").modal();
+        });
+
+        $("#editThresholds").click(function () {
+            $("#thresholds-modal").modal();
+        });
+
+        $("#editRFCal").click(function () {
+            $("#rfdetector-modal").modal();
+        });
+
+        $("#editExtra1").click(function () {
+            $("#extra1-modal").modal();
+        });
+
+        $("#editExtra2").click(function () {
+            $("#extra2-modal").modal();
+        });
+
+        let sendSwitchData = function (e) {
+            var value = "OFF";
+            if ($("#switch").is(":checked") === true) {
+                value = "ON";
+            }
+
+            $.ajax({
+                url: "/management/hardware/{{$.HardInfo.Serial}}",
+                method: "post",
+                data: { control: $("#modalSwitchName").attr("control-name"), value: value },
+                beforeSend: function(xhr){xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');},
+                success: function () {
+                    $("#switch-modal").modal('hide');
+                    location.reload();
+                },
+            });
+            e.preventDefault();
+        };
+
+        $("#modalSwitchSubmit").on("click", sendSwitchData);
+        $("#formSwitch").on("submit", sendSwitchData);
+
+        let sendAttData = function (e) {
+            let attValue = parseFloat($("#modalAttenuatorValue").val());
+
+            if( attValue > 31.75){
+                $("#modalAttenuatorValue").removeClass("is-valid").addClass("is-invalid");
+                $("#modalAttenuatorInvalidFeedback").empty().append("The max value allowed is 31.75").show();
+                return
+            }
+
+            if((attValue % 0.25) !== 0){
+                $("#modalAttenuatorValue").removeClass("is-valid").addClass("is-invalid");
+                $("#modalAttenuatorInvalidFeedback").empty().append("Invalid value").show();
+                return
+            }else{
+                $("#modalAttenuatorValue").removeClass("is-invalid").addClass("is-valid");
+                $("#modalAttenuatorInvalidFeedback").empty().hide();
+            }
+
+            $.ajax({
+                url: "/management/hardware/{{$.HardInfo.Serial}}",
+                method: "post",
+                data: { control: $("#modalAttenuatorName").attr("control-name"), value: attValue },
+                beforeSend: function(xhr){xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');},
+                success: function () {
+                    $("#rfAtt-modal").modal('hide');
+                    location.reload();
+                },
+            });
+            e.preventDefault();
+        };
+
+        $("#modalAttenuatorSubmit").on("click", sendAttData);
+        $("#formAtt").on("submit", sendAttData);
+
+        let sendThresholdsData = function (e) {
+            let data = $("#formThresholds").serializeArray();
+            e.preventDefault();
+            $.ajax({
+                url: "/management/hardware/{{$.HardInfo.Serial}}/thresholds",
+                method: "post",
+                data: data,
+                beforeSend: function(xhr){xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');},
+                success: function () {
+                    $("#thresholds-modal").modal('hide');
+                    location.reload();
+                },
+            });
+        };
+
+        $("#modalThresholdsSubmit").on("click", sendThresholdsData);
+        $("#formThresholds").on("submit", sendThresholdsData);
+
+        let sendRfDetectorData = function (e) {
+            let data = $("#formRfdetector").serializeArray();
+            e.preventDefault();
+            $.ajax({
+                url: "/management/hardware/{{$.HardInfo.Serial}}/rfdetector",
+                method: "post",
+                data: data,
+                beforeSend: function(xhr){xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');},
+                success: function () {
+                    $("#rfdetector-modal").modal('hide');
+                    location.reload();
+                },
+            });
+        };
+
+        $("#modalRfDetectorSubmit").on("click", sendRfDetectorData);
+        $("#formRfDetector").on("submit", sendRfDetectorData);
+
+        let sendExtra1Data = function (e) {
+            let data = $("#formExtra1").serializeArray();
+            var value = "OFF";
+
+            e.preventDefault();
+            $.ajax({
+                url: "/management/hardware/{{$.HardInfo.Serial}}/extra",
+                method: "post",
+                data: data,
+                beforeSend: function(xhr){xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');},
+                success: function () {
+                    $("#extra1-modal").modal('hide');
+                    location.reload();
+                },
+            });
+        };
+
+        $("#modalExtra1Submit").on("click", sendExtra1Data);
+        $("#formExtra1").on("submit", sendExtra1Data);
+
+        let sendExtra2Data = function (e) {
+            let data = $("#formExtra2").serializeArray();
+            e.preventDefault();
+            $.ajax({
+                url: "/management/hardware/{{$.HardInfo.Serial}}/extra",
+                method: "post",
+                data: data,
+                beforeSend: function(xhr){xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');},
+                success: function () {
+                    $("#extra2-modal").modal('hide');
+                    location.reload();
+                },
+            });
+        };
+
+        $("#modalExtra2Submit").on("click", sendExtra2Data);
+        $("#formExtra2").on("submit", sendExtra2Data);
+    });
+
+    setTimeout(getData, 2000);
+</script>
+{{template "footer"}}

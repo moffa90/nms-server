@@ -1,0 +1,101 @@
+{{template "header"}}
+{{template "menu" .}}
+<div class="my-3 my-md-5">
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">
+                Ethernet: eth0
+            </h1>
+        </div>
+        <div class="row row-cards row-deck">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Interface settings</h3>
+                        <div class="card-options">
+                            <label class="custom-switch m-0">DHCP
+                                <input type="checkbox" value="1" id="dhcp" class="custom-switch-input" {{if .InterfaceInfo.DHCP }}checked="checked"{{end}}>
+                                <span style="margin-left: 10px" class="custom-switch-indicator"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div id="dhcp-msg" class="card-alert alert alert-success mb-0">
+                        DHCP activated
+                    </div>
+                    <div class="card-body" id="static-config-form">
+
+                        {{range $key, $e := .Errors}}
+                        <div class="alert alert-danger alert-dismissible">
+                            <i class="fe fe-alert-triangle mr-2" aria-hidden="true"></i>
+                            <button type="button" class="close" data-dismiss="alert"></button>
+                            {{$e}}
+                        </div>
+                        {{end}}
+
+                        Please set the correct parameters for the asked fields.
+                        <form action="/networks/ethernet" method="post">
+                            <div class="card-body p-6">
+                                <div class="form-group">
+                                    <label class="form-label">IP Address</label>
+                                    <input type="text" id="ip" class="form-control" data-mask="099.099.099.099" data-mask-clearifnotmatch="true" placeholder="000.000.000.000" autocomplete="off" maxlength="15" name="ip-address" value="{{.InterfaceInfo.IPAddress}}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Subnet Mask</label>
+                                    <input type="text" id="subnet" class="form-control" data-mask="099.099.099.099" data-mask-clearifnotmatch="true" placeholder="000.000.000.000" autocomplete="off" maxlength="15" name="subnet-mask" value="{{.InterfaceInfo.SubnetMask}}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Gateway</label>
+                                    <input type="text" id="gateway" class="form-control" data-mask="099.099.099.099" data-mask-clearifnotmatch="true" placeholder="000.000.000.000" autocomplete="off" maxlength="15" name="gateway" value="{{.InterfaceInfo.Gateway}}">
+                                </div>
+                                <div class="form-footer text-right">
+                                    <input name="dhcp" type="hidden" class="dhcp-input">
+                                    <button type="submit" class="btn btn-primary ml-auto">Save Changes</button>
+                                    <a href="/" class="btn btn-white ml-auto">Cancel</a>
+                                </div>
+                            </div>
+                            <script>
+                                require(['input-mask']);
+                            </script>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    requirejs(['jquery'], function( $ ) {
+
+        function checkSwitch() {
+            var radio = $("#dhcp");
+            var alert = $("#dhcp-msg");
+            var ip = $("#ip");
+            var subnet = $("#subnet");
+            var gateway = $("#gateway");
+            $(".dhcp-input").attr("value",radio.is(":checked"));
+
+            if (radio.is(":checked") == true) {
+                alert.removeClass("alert-warning")
+                        .addClass("alert-success")
+                        .empty()
+                        .append("DHCP activated");
+                ip.attr("disabled","disabled");
+                subnet.attr("disabled","disabled");
+                gateway.attr("disabled","disabled");
+            } else {
+                alert.removeClass("alert-success")
+                        .addClass("alert-warning")
+                        .empty()
+                        .append("DHCP deactivated");
+                ip.removeAttr("disabled","disabled");
+                subnet.removeAttr("disabled","disabled");
+                gateway.removeAttr("disabled","disabled");
+            }
+        };
+
+        checkSwitch();
+        $("#dhcp").click(checkSwitch);
+    });
+</script>
+{{template "footer"}}

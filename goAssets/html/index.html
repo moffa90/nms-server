@@ -1,0 +1,115 @@
+{{template "header"}}
+{{template "menu" .}}
+        <div class="my-3 my-md-5">
+            <div class="container">
+                <div class="page-header">
+                    <h1 class="page-title">
+                        Dashboard - {{.Host.Hostname}}
+                    </h1>
+                </div>
+
+                <div class="row">
+                    {{if not .Backplanes}}
+                        <div class="col-md-12 col-xl-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="mb-1">There is no registered devices</h5>
+                                </div>
+                            </div>
+                        </div>
+                    {{end}}
+                    {{ range $key, $backplane := .Backplanes }}
+                        <div class="col-md-12 col-xl-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Backplane #{{$backplane.Number}}</h3>
+                                    <div class="card-options">
+                                        <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+                                    </div>
+                                </div>
+                                <div class="card-body" style="overflow: scroll">
+                                    <table class="table card-table table-vcenter text-nowrap table-bordered table-striped table-light">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>Slot #1</th>
+                                                <th>Slot #2</th>
+                                                <th>Slot #3</th>
+                                                <th>Slot #4</th>
+                                                {{ if or (eq $.Mode "hec-1") (eq $.Mode "hec-2") }}
+                                                <th>Slot #5</th>
+                                                {{end}}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <th>Device #1</th>
+                                                {{ range $key2, $slot := $backplane.Slots}}
+                                                    <td>
+                                                        {{$hard:= index $slot.Hardware 0}}
+                                                        {{template "cellInfo" $hard}}
+                                                    </td>
+                                                {{end}}
+                                            </tr>
+                                            {{ if or (eq $.Mode "hec-1") (eq $.Mode "hec-2") }}
+                                            <tr>
+                                                <th>Device #2</th>
+                                                {{ range $key2, $slot := $backplane.Slots}}
+                                                    <td>
+                                                        {{$hard:= index $slot.Hardware 1}}
+                                                        {{template "cellInfo" $hard}}
+                                                    </td>
+                                                {{end}}
+                                            </tr>
+                                            {{end}}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 col-xl-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Remotes #{{$backplane.Number}}</h3>
+                                    <div class="card-options">
+                                        <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+                                    </div>
+                                </div>
+                                <div class="card-body" style="overflow: scroll">
+                                    <table class="table card-table table-vcenter text-nowrap table-bordered table-striped table-light">
+                                        <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Group #1</th>
+                                            <th>Group #2</th>
+                                            <th>Group #3</th>
+                                            <th>Group #4</th>
+                                            <th>Group #5</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {{range $key, $remote := $.Remotes}}
+                                            <tr>
+                                                <th>Remote #{{$key}}</th>
+                                                {{range $key, $group := $remote}}
+                                                    <td>
+                                                        {{if ne $group.Ip ""}}
+                                                            {{template "cellInfo2" $group}}
+                                                        {{else}}
+                                                            {{template "noRemoteCellTemplate"}}
+                                                        {{end}}
+                                                    </td>
+                                                {{end}}
+                                            </tr>
+                                        {{end}}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    {{end}}
+                </div>
+            </div>
+        </div>
+{{template "footer"}}

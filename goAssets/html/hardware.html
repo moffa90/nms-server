@@ -1,0 +1,278 @@
+{{template "header"}}
+{{template "menu" .}}
+<div class="my-3 my-md-5">
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">
+                Hardware
+            </h1>
+        {{ range $key, $e := .Errors }}{{$e}}{{end}}
+        </div>
+        <div class="row">
+            <div class="col-sm-6 col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Detected Devices</h2>
+                    </div>
+                    {{ range $key, $dev := .DetectedDevices }}
+                        <div class="list-group">
+                            <div class="list-group-item list-group-item-action flex-column align-items-start">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">{{$dev.HumanDesc}}</h5>
+                                    <small>{{$dev.Bus | ToHex}}:{{$dev.Address | ToHex}}</small>
+                                </div>
+                                <p class="mb-1"><strong>Vendor ID:</strong> {{$dev.VendorID | ToHex}}</p>
+                                <p class="mb-1"><strong>Product ID:</strong> {{$dev.ProductID | ToHex}}</p>
+                                <p class="mb-1"><strong>Serial:</strong> {{$dev.Serial}}</p>
+                                <button type="button" class="btn btn-outline-primary float-right" onclick="getData({{$dev.Serial}})">Register Device</button>
+                            </div>
+                        </div>
+                    {{end}}
+                    {{if not .DetectedDevices}}
+                    <tr>
+                        <div class="list-group">
+                            <div class="list-group-item list-group-item-action flex-column align-items-start">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">There is no detected devices</h5>
+                                </div>
+                                <button type="button" class="btn btn-outline-primary float-right" onclick="window.location.reload()">Reload</button>
+                            </div>
+                        </div>
+                    </tr>
+                    {{end}}
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Registered Devices</h2>
+                    </div>
+                    {{ range $key, $dev := .RegisteredDevices }}
+                        <div class="list-group">
+                            <div class="list-group-item list-group-item flex-column align-items-start">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">{{$dev.ProductId}}</h5><small>{{$dev.FWversion}}</small>
+                                </div>
+                                <p class="mb-1"><strong>Device ID:</strong> {{$dev.DevId}}</p>
+                                <p class="mb-1"><strong>Backplane #:</strong> {{$dev.Backplane}}</p>
+                                <p class="mb-1"><strong>Slot #:</strong> {{$dev.Address}}</p>
+                                <button type="button" class="btn btn-outline-danger float-right" onclick="deleteDevice({{$dev.Id}})">Unregister Device </button>
+                                <button type="button" class="btn btn-outline-info float-right" style="margin: 0 10px" onclick="updateFirmwareModal({{$dev.DevId}}, {{$dev.ProductId}}, {{$dev.Backplane}}, {{$dev.Address}})" >Update Firmware </button>
+                            </div>
+                        </div>
+                    {{end}}
+                    {{if not .RegisteredDevices}}
+                        <div class="list-group">
+                            <div class="list-group-item list-group-item-action flex-column align-items-start">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">There is no registered devices</h5>
+                                </div>
+                            </div>
+                        </div>
+                    {{end}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Register Device Modal -->
+<div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">General Hardware Information</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <div class="well well-sm">Please check the information and click proceed if you agreed with the information.</div>
+                <p class="mb-1"><strong>Device ID:</strong> <span id="device"></span> </p>
+                <p class="mb-1"><strong>Product ID:</strong> <span id="product"></span></p>
+                <p class="mb-1"><strong>Address ID:</strong> <span id="address"></span> </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <form action="/management/hardware/" method="post">
+                    <input type="hidden" name="device" id="device-input">
+                    <input type="hidden" name="product" id="product-input">
+                    <input type="hidden" name="address" id="address-input">
+                    <input type="hidden" name="serial" id="serial-input">
+                    <input type="submit" class="btn btn-primary" value="Proceed" />
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Update firmware Modal -->
+<div class="modal fade" id="updateFirmwareModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="">Update Firmware</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <div id="fileUpload">
+                    <div class="well well-sm">You are updating the device <strong id="addr"></strong> which product ID is <strong id="pID"></strong></div>
+                    <form enctype="multipart/form-data" id="updateFirmwareForm">
+                        <div class="form-group">
+                            <label for="exampleFormControlFile1">Please browse the corresponding .cyacd file with the selected device.</label>
+                            <input type="file" class="form-control-file" id="cyacdFile" name="cyacdFile" accept=".cyacd">
+                            <div class="invalid-feedback" id="invalid-file">Invalid file</div>
+                        </div>
+                    </form>
+                </div>
+                <div id="uploadProcess">
+                    <strong>Loading...</strong>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+                    </div>
+                </div>
+
+                <div id="successProcess">
+                    <strong>The device was updated successfully.</strong>
+                    <div id="logSuccess" style="background-color: lightgreen;padding: 10px;font-size: 10pt;height: auto;scroll-behavior: auto;overflow: auto; max-height: 300px">
+                        <samp>
+                        </samp>
+                    </div>
+                </div>
+
+                <div id="errorProcess">
+                    <strong>There was an error in the updating process.</strong>
+                    <div id="logError" style="background-color: lightpink;padding: 10px;font-size: 10pt;height: auto;scroll-behavior: auto;overflow: auto; max-height: 300px">
+                        <samp>
+                        </samp>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="updateFirmwareBtn">Update Device</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function getData(serial){
+        requirejs(['jquery'], function( $ ) {
+            $.get("/management/hardware/" + serial, function( data ) {
+
+                $("#device").html(data["DeviceID"]);
+                $("#product").html(data["ProductID"]);
+                $("#address").html(data["AddressID"]);
+                $("#device-input").val(data["DeviceID"]);
+                $("#product-input").val(data["ProductID"]);
+                $("#address-input").val(data["AddressID"]);
+                $("#serial-input").val(data["Serial"]);
+                $("#registerModal").modal();
+            },"json")
+        });
+    }
+
+    function deleteDevice(id){
+        requirejs(['jquery'], function( $ ) {
+            $.ajax({
+                url: "/management/hardware/" + id,
+                method: "delete",
+                beforeSend: function(xhr){xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');},
+                success: function (data) {
+                    location.reload();
+                },
+            })
+        });
+    }
+
+    function updateFirmwareModal(serial, pID, back, address){
+        requirejs(['jquery'], function( $ ) {
+            $("#pID").empty().append(pID);
+            $("#addr").empty().append("backplane: " + back + ", slot: " + address);
+            $("#fileUpload").show();
+            $("#uploadProcess").hide();
+            $("#successProcess").hide();
+            $("#errorProcess").hide();
+            $("#updateFirmwareModal").modal();
+            $("#updateFirmwareBtn").attr("data-id", serial).show();
+        });
+    }
+
+    requirejs(['jquery'], function( $ ) {
+        function nl2br (str, is_xhtml) {
+            var breakTag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br/>' : '<br>';
+            return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1'+ breakTag +'$2');
+        }
+
+        let validateFile = function (){
+            let ext = $("#cyacdFile").val().split('.').pop().toLowerCase();
+            if( "cyacd" !== ext) {
+                $("#invalid-file").empty().append("Invalid file");
+                $("#invalid-file").show();
+                return false
+            }
+
+            if($("#cyacdFile")[0].files[0].size > 1024*1024){
+                $("#invalid-file").empty().append("File is too big. Max 1MB");
+                $("#invalid-file").show();
+                return false
+            }
+            $("#invalid-file").hide();
+
+            return true
+        };
+
+        let uploadFile = function (){
+             if(validateFile() === true) {
+                 $("#fileUpload").hide();
+                 $("#uploadProcess").show();
+                 $("#updateFirmwareBtn").hide();
+                 $.ajax({
+                     url: "/management/hardware/"+ $(this).attr("data-id") +"/updateFirmware",
+                     type: 'POST',
+                     data: new FormData($("#updateFirmwareForm")[0]),
+                     cache: false,
+                     contentType: false,
+                     processData: false,
+                     xhr: function() {
+                         var myXhr = $.ajaxSettings.xhr();
+                         if (myXhr.upload) {
+                             // For handling the progress of the upload
+                             myXhr.upload.addEventListener('progress', function(e) {
+                                 if (e.lengthComputable) {
+                                     console.log(e.loaded,e.total)
+                                     $('progress').attr({
+                                         value: e.loaded,
+                                         max: e.total,
+                                     });
+                                 }
+                             } , false);
+                         }
+                         return myXhr;
+                     },
+                     success: function (data) {
+                         $("#uploadProcess").hide();
+                         $("#successProcess").show();
+                         $("#logSuccess samp").empty().append(nl2br(data)).show();
+                     },
+                     error: function (data) {
+                         $("#uploadProcess").hide();
+                         $("#errorProcess").show();
+
+                         $("#logError samp").empty().append(nl2br(data.responseText)).show();
+                     }
+                 });
+             }
+        };
+
+        $("#updateFirmwareBtn").on("click",uploadFile);
+        $("#cyacdFile").on("change",validateFile);
+
+        $('#updateFirmwareModal').on('hidden.bs.modal', function (e) {
+            location.reload();
+        })
+    });
+</script>
+{{template "footer"}}

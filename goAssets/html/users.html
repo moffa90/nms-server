@@ -1,0 +1,76 @@
+{{template "header"}}
+{{template "menu" .}}
+        <div class="my-3 my-md-5">
+            <div class="container">
+                <div class="page-header">
+                    <h1 class="page-title">
+                        Users
+                    </h1>
+                </div>
+                <div class="row row-cards row-deck">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="table-responsive">
+                                <table class="table table-hover table-outline table-vcenter text-nowrap card-table">
+                                    <thead>
+                                    <tr>
+                                        <th>Username</th>
+                                        <th>Name</th>
+                                        <th>Role</th>
+                                        <th>Activity</th>
+                                        <th>Status</th>
+                                        <th class="text-center"><i class="icon-settings"></i></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {{ range $key, $user := .Users }}
+                                        <tr>
+                                            <td>
+                                                <div>{{$user.Username}}</div>
+                                                <div class="small text-muted">
+                                                    Registered: {{$user.CreatedAt | TimeToDate}}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div>{{$user.Name | Capitalize}}</div>
+                                            </td>
+                                            <td>
+                                                <div>{{$user.Role.Name | Capitalize}}</div>
+                                            </td>
+                                            <td>
+                                                <div class="small text-muted">Last login</div>
+                                                <div>{{$user.LastLogin | TimeToDate}}</div>
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    {{if $user.Active}}
+                                                        <span class="badge badge-success">Unblocked</span>
+                                                    {{else}}
+                                                        <span class="badge badge-danger">Blocked</span>
+                                                    {{end}}
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="item-action dropdown">
+                                                    <a href="javascript:void(0)" data-toggle="dropdown" class="icon"><i class="fe fe-more-vertical"></i></a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <a href="/management/users/edit/{{$user.Id}}" class="dropdown-item"><i class="dropdown-icon fe fe-edit-2"></i> Edit </a>
+                                                        {{if ne $user.Username "admin"}}
+                                                        <a href="/management/users/block/{{$user.Id}}" class="dropdown-item"><i class="dropdown-icon fe {{if $user.Active}}fe-lock{{else}}fe-unlock{{end}}"></i>
+                                                            {{if $user.Active}} Block {{else}} Unblock {{end}}
+                                                        </a>
+                                                        {{end}}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {{end}}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+{{template "footer"}}

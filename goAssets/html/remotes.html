@@ -1,0 +1,225 @@
+{{template "header"}}
+{{template "menu" .}}
+<div class="container">
+    <div class="page-header">
+        <h1 class="page-title">
+            Remotes configuration
+        </h1>
+    </div>
+    <div class="row row-cards row-deck">
+        <div class="col-md-12 col-xl-12">
+            <div class="card">
+                <table class="table card-table table-vcenter text-nowrap table-bordered table-striped table-light">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>Group #1</th>
+                        <th>Group #2</th>
+                        <th>Group #3</th>
+                        <th>Group #4</th>
+                        <th>Group #5</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{range $key, $remote := .Remotes}}
+                        <tr>
+                            <th>Remote #{{$key}}</th>
+                            {{range $key2, $group := $remote}}
+                            <td>
+                                {{if ne $group.Ip ""}}
+                                    <h6>
+                                        <a href="#">{{$group.Hostname}}</a><br>
+                                        <small>{{$group.Ip}}:{{$group.Port}}</small>
+                                    </h6>
+
+                                    <a href="#" id="{{$key}}-{{$key2}}" class="small float-right text-red modalRemove" style="margin: 0 10px"
+                                       data-group="{{$key2}}"
+                                       data-remote="{{$key}}"
+                                       data-ip="{{$group.Ip}}"
+                                       data-port="{{$group.Port}}"
+                                    >Remove</a>
+                                    <a href="#" id="{{$key}}-{{$key2}}" class="small float-right modalEdit"
+                                       data-group="{{$key2}}"
+                                       data-remote="{{$key}}"
+                                       data-ip="{{$group.Ip}}"
+                                       data-port="{{$group.Port}}"
+                                    >Edit</a>
+                                {{else}}
+                                    <h6 class="text-center">
+                                        <a href="#" id="{{$key}}-{{$key2}}" class="text-center modalAdd"  data-group="{{$key2}}" data-remote="{{$key}}"> <i class="fe fe-plus"></i> Add </a>
+                                    </h6>
+                                {{end}}
+                            </td>
+                            {{end}}
+                        </tr>
+                    {{end}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Register or edit remotes -->
+<div class="modal fade" id="addRemoteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Add Remote</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <div class="well well-sm">Please fill the required information.</div>
+                <div class="invalid-feedback" id="error"></div>
+                <form action="" method="post" id="formRemote">
+                    <div class="card-body p-6">
+                        <div class="form-group">
+                            <label class="form-label" for="ipValue">IP address:</label>
+                            <input type="text" id="ip" class="form-control" data-mask="099.099.099.099" data-mask-clearifnotmatch="true" placeholder="000.000.000.000" autocomplete="off" maxlength="15" name="ip-address" value="">
+                            <div class="invalid-feedback" id="invalid-ip"></div>
+                            <script>
+                                require(['input-mask']);
+                            </script>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="port">Port:</label>
+                            <input type="text" class="form-control" placeholder="161" name="port" id="port" value="" />
+                        </div>
+                    </div>
+                    <input type="hidden" value="" name="group" id="group" />
+                    <input type="hidden" value="" name="remote" id="remote" />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnSubmitAddRemote">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- remove remotes -->
+<div class="modal fade" id="removeRemoteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Remove Remote</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <div class="well well-sm">Are you sure you want to remove this remote?.</div>
+                <div class="invalid-feedback" id="error"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                <button type="button" class="btn btn-primary" id="yesRemoveRemote">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    requirejs(['jquery'], function( $ ) {
+        let modalAdd = function(){
+            $("#addRemoteModal").modal();
+            let g = $(this).attr("data-group");
+            let r = $(this).attr("data-remote");
+            $("#group").val(g);
+            $("#remote").val(r);
+            $("#ip").val("");
+            $("#port").val("");
+            $("#invalid-ip").hide();
+        };
+
+        $(".modalAdd").click(modalAdd);
+
+        let modalEdit = function(){
+            $("#addRemoteModal").modal();
+            let g = $(this).attr("data-group");
+            let r = $(this).attr("data-remote");
+            let ip = $(this).attr("data-ip");
+            let port = $(this).attr("data-port");
+            $("#group").val(g);
+            $("#remote").val(r);
+            $("#ip").val(ip);
+            $("#port").val(port);
+            $("#invalid-ip").hide();
+            $("#error").hide();
+        };
+
+        $(".modalEdit").click(modalEdit);
+
+        let modalRemove = function(){
+            $("#removeRemoteModal").modal();
+            let g = $(this).attr("data-group");
+            let r = $(this).attr("data-remote");
+            $("#yesRemoveRemote").attr("data-remote", r)
+            $("#yesRemoveRemote").attr("data-group", g)
+        };
+
+        $(".modalRemove").click(modalRemove);
+
+        var currentReq = null;
+        let saveRemote = function(e){
+                let data = $("#formRemote").serializeArray();
+                e.preventDefault();
+                currentReq = $.ajax({
+                    url: "/management/remotes/",
+                    method: "post",
+                    data: data,
+                    beforeSend: function(xhr){
+                        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                        $("#btnSubmitAddRemote").addClass("btn-loading");
+                    },
+                    success: function () {
+                        $("#addRemoteModal").modal('hide');
+                        location.reload();
+                        $("#btnSubmitAddRemote").removeClass("btn-loading");
+                    },
+                    error: function (resp) {
+                        if (resp.responseText !== undefined){
+                            let objJSON = jQuery.parseJSON(resp.responseText);
+                            $("#error").empty().append(objJSON[0]).show();
+                            $("#invalid-ip").empty().append(objJSON[1]).show();
+                            $("#btnSubmitAddRemote").removeClass("btn-loading");
+                        }
+
+                    }
+                });
+        };
+
+        $("#btnSubmitAddRemote").on("click", saveRemote);
+        $("#formRemote").on("submit", saveRemote);
+
+        let deleteRemote = function(e){
+            let r = $(this).attr("data-remote");
+            let g = $(this).attr("data-group");
+            e.preventDefault();
+            $.ajax({
+                url: "/management/remotes/" + r + "/" + g,
+                method: "delete",
+                //data: {"remote": r, "group": g},
+                beforeSend: function(xhr){xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');},
+                success: function () {
+                    $("#removeRemoteModal").modal('hide');
+                    location.reload();
+                }
+            });
+        };
+
+        $("#yesRemoveRemote").on("click", deleteRemote);
+
+        $("#addRemoteModal").on("hide.bs.modal",function (e) {
+            if(currentReq !== null){
+                currentReq.abort();
+                $("#btnSubmitAddRemote").removeClass("btn-loading");
+                currentReq = null;
+            }
+        })
+    });
+
+</script>
+{{template "footer"}}

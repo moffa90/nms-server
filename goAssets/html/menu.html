@@ -1,0 +1,74 @@
+{{define "menu"}}
+<div class="header py-4">
+    <div class="container">
+        <div class="d-flex">
+            <a class="header-brand" href="index.html">
+                <img src="/assets/images/Logo.png" class="header-brand-img" alt="tabler logo">
+            </a>
+            <div class="d-flex order-lg-2 ml-auto" style="padding-top: 1rem">
+                <div class="dropdown">
+                    <a href="#" class="nav-link pr-0 leading-none" data-toggle="dropdown">
+                        <span class="avatar" style="background-image: url(/assets/images/user.png)"></span>
+                        <span class="ml-2 d-none d-lg-block">
+                          <span class="text-default">{{index .Info "name" | Capitalize}}({{index .Info "username"}})</span>
+                          <small class="text-muted d-block mt-1">{{index .Info "role" | Capitalize}}</small>
+                        </span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                        <a class="dropdown-item" href="#">
+                            <i class="dropdown-icon fe fe-settings"></i> Settings
+                        </a>
+                        <a class="dropdown-item" href="/logout">
+                            <i class="dropdown-icon fe fe-log-out"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <a href="#" class="header-toggler d-lg-none ml-3 ml-lg-0 collapsed" style="height: auto" data-toggle="collapse" data-target="#headerMenuCollapse" aria-expanded="false">
+                <span class="header-toggler-icon"></span>
+            </a>
+        </div>
+    </div>
+</div>
+<div class="header collapse d-lg-flex p-0" id="headerMenuCollapse">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg order-lg-first">
+                <ul class="nav nav-tabs border-0 flex-column flex-lg-row">
+                    <li class="nav-item">
+                        <a href="/" class="nav-link {{if eq .Active "index"}} active {{end}}"><i class="fe fe-home"></i> Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/information" class="nav-link {{if eq .Active "info"}} active {{end}}"><i class="fe fe-info"></i> System Information</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="javascript:void(0)" class="nav-link {{if eq .Active "networks"}} active {{end}}" data-toggle="dropdown"><i
+                                class="fe fe-wifi"></i> Networks</a>
+                        <div class="dropdown-menu dropdown-menu-arrow">
+                            <a href="/networks/ethernet" class="dropdown-item ">Ethernet</a>
+                            <!-- <a href="/networks/wifi" class="dropdown-item ">WiFi</a> -->
+                        </div>
+                    </li>
+                    {{if eq (index .Info "role") "admin"}}
+                    <li class="nav-item">
+                        <a href="javascript:void(0)" class="nav-link {{if eq .Active "management"}} active {{end}}" data-toggle="dropdown"><i
+                                class="fe fe-sliders"></i> Management</a>
+                        <div class="dropdown-menu dropdown-menu-arrow">
+                            <a href="/management/hardware" class="dropdown-item">Hardware</a>
+                            <a href="/management/users" class="dropdown-item">Users</a>
+                            <a href="/management/snmp" class="dropdown-item">SNMP</a>
+{{/*                            <a href="/management/remotes" class="dropdown-item">Remotes</a>*/}}
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/configuration" class="nav-link {{if eq .Active "config"}} active {{end}}"><i class="fe fe-settings"></i> Configuration</a>
+                    </li>
+                    {{end}}
+                </ul>
+            </div>
+            <div class="col-lg-2 ml-auto">
+            </div>
+        </div>
+    </div>
+</div>
+{{end}}

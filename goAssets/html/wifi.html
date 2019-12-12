@@ -1,0 +1,105 @@
+{{template "header"}}
+{{template "menu" .}}
+<div class="container">
+    <div class="page-header">
+        <h1 class="page-title">
+            Wifi: wlan0
+        </h1>
+    </div>
+    <div class="row row-cards row-deck">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Access point settings</h3>
+                    <div class="card-options">
+                        <label class="custom-switch m-0">Active
+                            <input type="checkbox" value="1" id="ap" class="custom-switch-input" {{if .InterfaceInfo.DHCP }}checked="checked"{{end}}>
+                            <span style="margin-left: 10px" class="custom-switch-indicator"></span>
+                        </label>
+                    </div>
+                </div>
+                <div id="ap-msg" class="card-alert alert alert-warning mb-0">
+                    AP inactive
+                </div>
+                <div class="card-body" id="form">
+
+                {{range $key, $e := .Errors}}
+                    <div class="alert alert-danger alert-dismissible">
+                        <i class="fe fe-alert-triangle mr-2" aria-hidden="true"></i>
+                        <button type="button" class="close" data-dismiss="alert"></button>
+                    {{$e}}
+                    </div>
+                {{end}}
+
+                    Please set the correct parameters for the asked fields.
+                    <form action="/networks/wifi" method="post">
+                        <div class="card-body p-6">
+                            <div class="form-group">
+                                <label class="form-label">SSID</label>
+                                <input type="text" class="form-control" placeholder="Cellgain-AP" name="ssid" id="ssid" value="{{.InterfaceInfo.SSID}}">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Password</label>
+                                <input type="password" class="form-control" id="password" name="password" placeholder="Secret" id="password" value="{{.InterfaceInfo.Password}}">
+                                <label class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="show-pass" value="1">
+                                    <span class="custom-control-label">Show password</span>
+                                </label>
+                            </div>
+                            <div class="form-footer text-right">
+                                <input name="active" type="hidden" id="active">
+                                <button type="submit" class="btn btn-primary ml-auto">Save Changes</button>
+                                <a href="/" class="btn btn-white ml-auto">Cancel</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    requirejs(['jquery'], function( $ ) {
+
+        function checkSwitch() {
+            var radio = $("#ap");
+            var alert = $("#ap-msg");
+            var ssid = $("#ssid");
+            var password = $("#password");
+            var show_pass = $("#show-pass");
+            $("#active").attr("value",radio.is(":checked"));
+
+            if (radio.is(":checked") == true) {
+                alert.removeClass("alert-warning")
+                        .addClass("alert-success")
+                        .empty()
+                        .append("AP activated");
+                ssid.removeAttr("disabled","disabled");
+                password.removeAttr("disabled","disabled");
+                show_pass.removeAttr("disabled","disabled");
+            } else {
+                alert.removeClass("alert-success")
+                        .addClass("alert-warning")
+                        .empty()
+                        .append("AP deactivated");
+                ssid.attr("disabled","disabled");
+                password.attr("disabled","disabled");
+                show_pass.attr("disabled","disabled");
+            }
+        };
+
+        $("#show-pass").click(function () {
+            if ($(this).is(":checked") == true){
+                $("#password").attr("type","text");
+            }else{
+                $("#password").attr("type","password");
+            }
+        });
+
+        checkSwitch();
+        $("#ap").click(checkSwitch);
+    });
+</script>
+
+{{template "footer"}}

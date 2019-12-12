@@ -1,0 +1,5 @@
+#!/bin/bash
+
+connmanctl enable wifi
+sleep 1
+connmanctl tether wifi on {{.SSID}} {{.Password}}

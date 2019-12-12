@@ -1,0 +1,31 @@
+{{template "header"}}
+{{template "menu" .}}
+<div class="container">
+    <div class="page-header">
+        <h1 class="page-title">
+            Error
+        </h1>
+    </div>
+    <div class="row row-cards row-deck">
+        <div class="col">
+            <div class="card">
+                <div class="card-status bg-red"></div>
+                <div class="card-header">
+                    <h3 class="card-title">Oops... Something went wrong.</h3>
+                    <div class="card-options">
+                        <a class="btn btn-primary btn-sm" href="javascript:history.back()">
+                            <i class="fe fe-arrow-left mr-2"></i>Go back
+                        </a>
+                        <a class="btn btn-secondary btn-sm ml-2" href="/">
+                            <i class="fe fe-home mr-2"></i>Dashboard
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {{.Message}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{template "footer"}}

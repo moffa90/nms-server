@@ -1,0 +1,37 @@
+[
+  {
+    "key": "hostname",
+    "value": "Triad-RF-NMS",
+    "category": "general"
+  },
+  {
+    "key": "bootloader-key",
+    "value": "",
+    "category": "general"
+  },
+  {
+    "key": "port",
+    "value": "161",
+    "category": "snmp"
+  },
+  {
+    "key": "write-string",
+    "value": "private",
+    "category": "snmp"
+  },
+  {
+    "key": "read-string",
+    "value": "public",
+    "category": "snmp"
+  },
+  {
+    "key": "sys-location",
+    "value": "TBD",
+    "category": "snmp"
+  },
+  {
+    "key": "sys-contact",
+    "value": "TBD",
+    "category": "snmp"
+  }
+]

@@ -1,0 +1,45 @@
+{{template "header"}}
+{{template "menu" .}}
+    <div class="my-3 my-md-5">
+        <div class="container">
+            <div class="page-header">
+                <h1 class="page-title">
+                    Edit User: {{.User.Username}}
+                </h1>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <form class="card" action="/users/{{.User.Id}}" method="post">
+                        <div class="card-body p-6">
+                            <div class="form-group">
+                                <label class="form-label">Name</label>
+                                <input type="text" class="form-control" placeholder="Name" name="name" value="{{.User.Name}}">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Password</label>
+                                <input type="password" class="form-control" name="password" placeholder="Password">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Confirm Password</label>
+                                <input type="password" class="form-control" name="password-confirm" placeholder="Confirm password">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Role</label>
+                                <select name="role" class="form-control custom-select">
+                                    <option value="">Select an option</option>
+                                    {{range $key, $role := .Roles}}
+                                        <option value="{{$role.Id}}" {{if eq $role.Id $.User.RoleID}} selected="selected"{{end}} >{{$role.Name | Capitalize}}</option>
+                                    {{end}}
+                                </select>
+                            </div>
+                            <div class="form-footer text-right">
+                                <button type="submit" class="btn btn-primary ml-auto">Save Changes</button>
+                                <a href="/management/users" class="btn btn-white ml-auto">Cancel</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{{template "footer"}}

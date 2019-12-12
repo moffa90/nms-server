@@ -1,0 +1,101 @@
+{{template "header"}}
+{{template "menu" .}}
+<div class="container">
+    <div class="page-header">
+        <h1 class="page-title">
+            System Information
+        </h1>
+    </div>
+    <div class="row row-cards">
+        <div class="col-sm-6 col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">General Information</h4>
+                </div>
+                <table class="table card-table">
+                    <tr>
+                        <td>Hostname</td>
+                        <td class="text-right"><span class="text-muted">{{ .Host.Hostname }}</span></td>
+                    </tr>
+                    <tr>
+                        <td>Uptime</td>
+                        <td class="text-right"><span class="text-muted">{{ .Host.Uptime | SecondsToMinutes }}</span></td>
+                    </tr>
+                    <tr>
+                        <td>Boot time</td>
+                        <td class="text-right"><span class="text-muted">{{ .Host.BootTime | EpochToDate }}</span></td>
+                    </tr>
+                    <tr>
+                        <td>OS</td>
+                        <td class="text-right"><span class="text-muted">{{ .Host.Platform  | ToUpper }}</span></td>
+                    </tr>
+                    <tr>
+                        <td>OS Version</td>
+                        <td class="text-right"><span class="text-muted">{{ .Host.PlatformVersion }}</span></td>
+                    </tr>
+                    <tr>
+                        <td>Kernel Version</td>
+                        <td class="text-right"><span class="text-muted">{{ .Host.KernelVersion }}</span></td>
+                    </tr>
+                    <tr>
+                        <td>Mender Version</td>
+                        <td class="text-right"><span class="text-muted">{{ .Mender }}</span></td>
+                    </tr>
+                    <tr>
+                        <td>Mender Artifact</td>
+                        <td class="text-right"><span class="text-muted">{{ .Artifact }}</span></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">System Status</h4>
+                </div>
+                <table class="table card-table">
+                    <tr>
+                        <td>Cores</td>
+                        <td class="text-right"><span class="text-muted">{{ .CPU.Cores }}</span></td>
+                    </tr>
+                    <tr>
+                        <td>Load</td>
+                        <td class="text-right"><span class="text-muted">{{ .CPU.Usage | FormatPercent}}</span></td>
+                    </tr>
+                    <tr>
+                        <td>Total Memory</td>
+                        <td class="text-right"><span class="text-muted">{{ .Mem.Total | BytesToHuman }}</span></td>
+                    </tr>
+                    <tr>
+                        <td>Used Memory</td>
+                        <td class="text-right"><span class="text-muted">{{ .Mem.UsedPercent | FormatPercent }}</span></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Network Status</h4>
+                </div>
+                <table class="table card-table">
+                {{ range $key, $interface := .Net }}
+                    <tr>
+                        <td>
+                        {{$interface.Name}}
+                            </br>
+                        {{$interface.HardwareAddr}}
+                        </td>
+                        <td class="text-right">
+                        {{range $k, $address := $interface.Addrs}}
+                            <span class="text-muted">{{$address.Addr}}</span>
+                        {{end}}
+                        </td>
+                    </tr>
+                {{ end }}
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{{template "footer"}}
