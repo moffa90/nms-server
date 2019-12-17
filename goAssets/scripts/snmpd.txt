@@ -75,7 +75,7 @@ includeAllDisks  10%
 load   12 10 5
 
 #   send SNMPv1  traps
-trapsink     localhost public
+#trapsink     localhost public
 
 #   send SNMPv2c traps
 #trap2sink    localhost public
