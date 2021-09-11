@@ -1,7 +1,7 @@
 package worker
 
 import (
-	"github.com/moffa90/nms-server/db/models"
+	"github.com/moffa90/triadNMS/db/models"
 	"sync"
 	"time"
 )

@@ -1,9 +1,9 @@
 package information
 
 import (
-	"github.com/moffa90/nms-server/constants"
-	"github.com/moffa90/nms-server/utils"
-	"github.com/moffa90/nms-server/utils/security"
+	"github.com/moffa90/triadNMS/constants"
+	"github.com/moffa90/triadNMS/utils"
+	"github.com/moffa90/triadNMS/utils/security"
 	"fmt"
 	"github.com/shirou/gopsutil/cpu"
 	"github.com/shirou/gopsutil/host"

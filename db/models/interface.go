@@ -5,7 +5,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/satori/go.uuid"
 	"time"
-	"github.com/moffa90/nms-server/assets"
+	"github.com/moffa90/triadNMS/assets"
 )
 
 type Interface struct {

@@ -1,9 +1,9 @@
 package utils
 
 import (
-	"github.com/moffa90/nms-server/assets"
-	"github.com/moffa90/nms-server/constants"
-	"github.com/moffa90/nms-server/utils/func-maps"
+	"github.com/moffa90/triadNMS/assets"
+	"github.com/moffa90/triadNMS/constants"
+	"github.com/moffa90/triadNMS/utils/func-maps"
 	"html/template"
 	"io"
 	"log"

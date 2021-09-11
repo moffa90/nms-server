@@ -1,12 +1,12 @@
 package SNMPWorker
 
 import (
-	"github.com/moffa90/nms-server/constants"
-	"github.com/moffa90/nms-server/db"
-	"github.com/moffa90/nms-server/db/models"
-	"github.com/moffa90/nms-server/utils/snmpClient"
-	"github.com/moffa90/nms-server/worker"
-	log "github.com/Sirupsen/logrus"
+	"github.com/moffa90/triadNMS/constants"
+	"github.com/moffa90/triadNMS/db"
+	"github.com/moffa90/triadNMS/db/models"
+	"github.com/moffa90/triadNMS/utils/snmpClient"
+	"github.com/moffa90/triadNMS/worker"
+	log "github.com/sirupsen/logrus"
 	"sync"
 	"time"
 )

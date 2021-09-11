@@ -1,7 +1,7 @@
 package snmpClient
 
 import (
-	"github.com/moffa90/nms-server/constants/snmp"
+	"github.com/moffa90/triadNMS/constants/snmp"
 	"errors"
 	g "github.com/soniah/gosnmp"
 	"net"

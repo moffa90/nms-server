@@ -1,9 +1,9 @@
 package snmpTree
 
 import (
-	"github.com/moffa90/nms-server/constants/snmp"
-	"github.com/moffa90/nms-server/db"
-	"github.com/moffa90/nms-server/db/models"
+	"github.com/moffa90/triadNMS/constants/snmp"
+	"github.com/moffa90/triadNMS/db"
+	"github.com/moffa90/triadNMS/db/models"
 	"fmt"
 	"os"
 	"strconv"

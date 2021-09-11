@@ -8,7 +8,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"log"
 	"time"
-	"github.com/moffa90/nms-server/assets"
+	"github.com/moffa90/triadNMS/assets"
 )
 
 type User struct {

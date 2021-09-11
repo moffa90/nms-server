@@ -1,7 +1,7 @@
 package logout
 
 import (
-	"github.com/moffa90/nms-server/utils/security"
+	"github.com/moffa90/triadNMS/utils/security"
 	"net/http"
 )
 

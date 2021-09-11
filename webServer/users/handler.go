@@ -1,11 +1,11 @@
 package users
 
 import (
-	"github.com/moffa90/nms-server/constants"
-	"github.com/moffa90/nms-server/db"
-	"github.com/moffa90/nms-server/db/models"
-	"github.com/moffa90/nms-server/utils"
-	"github.com/moffa90/nms-server/utils/security"
+	"github.com/moffa90/triadNMS/constants"
+	"github.com/moffa90/triadNMS/db"
+	"github.com/moffa90/triadNMS/db/models"
+	"github.com/moffa90/triadNMS/utils"
+	"github.com/moffa90/triadNMS/utils/security"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
