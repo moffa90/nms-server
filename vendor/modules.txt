@@ -12,6 +12,8 @@ github.com/golang/mock/gomock
 # github.com/google/gousb v0.0.0-20181005115310-15d2fa288b98
 github.com/google/gousb
 github.com/google/gousb/usbid
+# github.com/google/uuid v1.3.0
+github.com/google/uuid
 # github.com/gorilla/context v1.1.1
 github.com/gorilla/context
 # github.com/gorilla/mux v1.6.3-0.20180903154305-9e1f5955c0d2
@@ -33,8 +35,6 @@ github.com/konsorten/go-windows-terminal-sequences
 github.com/mattn/go-sqlite3
 # github.com/patrickmn/go-cache v2.1.0+incompatible
 github.com/patrickmn/go-cache
-# github.com/satori/go.uuid v1.2.1-0.20180103174451-36e9d2ebbde5
-github.com/satori/go.uuid
 # github.com/shirou/gopsutil v2.17.13-0.20180927124308-a11c78ba2c13+incompatible
 github.com/shirou/gopsutil/cpu
 github.com/shirou/gopsutil/host

@@ -3,7 +3,7 @@ package models
 import (
 	"encoding/json"
 	"github.com/jinzhu/gorm"
-	"github.com/satori/go.uuid"
+	"github.com/google/uuid"
 	"time"
 	"github.com/moffa90/triadNMS/assets"
 )
@@ -23,7 +23,7 @@ type Interface struct {
 }
 
 func (i *Interface) BeforeCreate(scope *gorm.Scope) error {
-	id,_ := uuid.NewV4()
+	id := uuid.New()
 	scope.SetColumn("id", id.String())
 	return nil
 }

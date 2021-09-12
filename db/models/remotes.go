@@ -1,8 +1,8 @@
 package models
 
 import (
+	uuid "github.com/google/uuid"
 	"github.com/jinzhu/gorm"
-	uuid "github.com/satori/go.uuid"
 	"time"
 )
 
@@ -20,7 +20,7 @@ type Remote struct {
 }
 
 func (r *Remote) BeforeCreate(scope *gorm.Scope) error {
-	id,_ := uuid.NewV4()
+	id := uuid.New()
 	scope.SetColumn("id", id.String())
 	return nil
 }

@@ -2,8 +2,8 @@ package models
 
 import (
 	"fmt"
+	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
-	"github.com/satori/go.uuid"
 	"strconv"
 	"strings"
 	"time"
@@ -44,7 +44,7 @@ func MigrateHardware(db *gorm.DB) {
 }
 
 func (h *Hardware) BeforeCreate(scope *gorm.Scope) error {
-	id,_ := uuid.NewV4()
+	id := uuid.New()
 	scope.SetColumn("id", id.String())
 	return nil
 }

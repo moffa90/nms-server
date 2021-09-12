@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/jinzhu/gorm"
-	"github.com/satori/go.uuid"
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 	"log"
 	"time"
@@ -40,7 +40,7 @@ func (user *User) BeforeCreate(scope *gorm.Scope) error {
 		return errors.New("email duplicated")
 	}
 
-	id,_ := uuid.NewV4()
+	id := uuid.New()
 	scope.SetColumn("ID", id.String())
 
 	passwordHash, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)

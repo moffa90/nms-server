@@ -95,7 +95,7 @@
 			"Rev": "0a88db3545c4089ce0f555f496bfc78c491699e5"
 		},
 		{
-			"ImportPath": "github.com/satori/go.uuid",
+			"ImportPath": "github.com/google/uuid",
 			"Comment": "v1.2.0-4-g36e9d2e",
 			"Rev": "36e9d2ebbde5e3f13ab2e25625fd453271d6522e"
 		},

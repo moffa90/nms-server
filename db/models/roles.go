@@ -4,7 +4,7 @@ import (
 	"github.com/moffa90/triadNMS/assets"
 	"encoding/json"
 	"github.com/jinzhu/gorm"
-	"github.com/satori/go.uuid"
+	"github.com/google/uuid"
 	"strings"
 	"time"
 )
@@ -18,7 +18,7 @@ type Role struct {
 }
 
 func (r *Role) BeforeCreate(scope *gorm.Scope) error {
-	id,_ := uuid.NewV4()
+	id := uuid.New()
 	scope.SetColumn("id", id.String())
 	return nil
 }

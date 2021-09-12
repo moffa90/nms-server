@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/jinzhu/gorm"
-	"github.com/satori/go.uuid"
+	"github.com/google/uuid"
 	"log"
 	"time"
 )
@@ -26,7 +26,7 @@ func MigrateConfiguration(db *gorm.DB) {
 }
 
 func (c *Configuration) BeforeCreate(scope *gorm.Scope) error {
-	id,_ := uuid.NewV4()
+	id := uuid.New()
 	scope.SetColumn("id", id.String())
 	return nil
 }
