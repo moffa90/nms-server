@@ -57,12 +57,16 @@ gitlab.com/martinclaro/go-agentx/pdu
 gitlab.com/martinclaro/go-agentx/value
 # gitlab.com/martinclaro/go-oidsort v1.0.7-0.20180713180821-2977a9283d64
 gitlab.com/martinclaro/go-oidsort
-# golang.org/x/crypto v0.0.0-20190325154230-a5d413f7728c
+# golang.org/x/crypto v0.1.0
 golang.org/x/crypto/bcrypt
 golang.org/x/crypto/blowfish
 golang.org/x/crypto/ssh/terminal
-# golang.org/x/sys v0.0.0-20190215142949-d0b11bdaac8a
+# golang.org/x/sys v0.1.0
+golang.org/x/sys/internal/unsafeheader
+golang.org/x/sys/plan9
 golang.org/x/sys/unix
 golang.org/x/sys/windows
+# golang.org/x/term v0.1.0
+golang.org/x/term
 # gopkg.in/errgo.v1 v1.0.1
 gopkg.in/errgo.v1
