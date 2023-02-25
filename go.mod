@@ -31,6 +31,6 @@ require (
 	github.com/tarm/serial v0.0.0-20180830185346-98f6abe2eb07
 	gitlab.com/martinclaro/go-agentx v1.1.8-0.20180713181311-b05c2ce3085e
 	gitlab.com/martinclaro/go-oidsort v1.0.7-0.20180713180821-2977a9283d64 // indirect
-	golang.org/x/crypto v0.0.0-20190325154230-a5d413f7728c
+	golang.org/x/crypto v0.1.0
 	gopkg.in/errgo.v1 v1.0.1
 )
